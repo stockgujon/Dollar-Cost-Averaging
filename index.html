@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>定期定額試算器｜股匠理財部落</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #050505;
+    color: #fff;
+    font-family: "Microsoft JhengHei", "微軟正黑體", Arial, sans-serif;
+    min-height: 100vh;
+  }
+  .wrap {
+    width: min(100%, 900px);
+    margin: 0 auto;
+    padding: 42px 22px 60px;
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 34px;
+  }
+  .tag {
+    display: inline-block;
+    color: #111;
+    background: #ffd400;
+    font-weight: 800;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 14px;
+    margin-bottom: 14px;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(30px, 6vw, 48px);
+    line-height: 1.15;
+    font-weight: 900;
+    letter-spacing: 1px;
+  }
+  .subtitle {
+    color: #cfcfcf;
+    margin-top: 12px;
+    font-size: 16px;
+  }
+
+  .card {
+    background: #111;
+    border: 1px solid #292929;
+    border-radius: 20px;
+    padding: 26px;
+    margin-bottom: 22px;
+    box-shadow: 0 12px 35px rgba(0,0,0,.28);
+  }
+  .section-title {
+    font-size: 21px;
+    font-weight: 900;
+    color: #ffd400;
+    margin: 0 0 20px;
+  }
+  .input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .input-group {
+    position: relative;
+    min-width: 0;
+  }
+  .input-group label {
+    padding-right: 90px;
+  }
+  .input-unit {
+    position: absolute;
+    right: 14px;
+    top: 1px;
+    color: #777;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .input-help {
+    display: block;
+    color: #999;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-top: 6px;
+  }
+  .dividend-group {
+    grid-column: 1 / -1;
+  }
+  .input-grid .definition {
+    display: block;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .field { margin-bottom: 2px; }
+  label {
+    display: block;
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .hint {
+    display: block;
+    color: #999;
+    font-size: 13px;
+    font-weight: 400;
+    margin-top: 4px;
+  }
+  input, select {
+    width: 100%;
+    height: 50px;
+    border-radius: 10px;
+    border: 1px solid #3a3a3a;
+    background: #070707;
+    color: #fff;
+    padding: 0 14px;
+    font-size: 17px;
+    font-family: inherit;
+    outline: none;
+  }
+  input:focus, select:focus {
+    border-color: #ffd400;
+    box-shadow: 0 0 0 2px rgba(255,212,0,.12);
+  }
+  .definition {
+    display: block;
+    color: #bdbdbd;
+    font-size: 13px;
+    line-height: 1.7;
+    margin-top: 7px;
+  }
+
+  .year-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .radio-row {
+    display: flex;
+    gap: 10px;
+  }
+  .radio {
+    flex: 1;
+    position: relative;
+  }
+  .radio input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .radio span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    border: 1px solid #3a3a3a;
+    border-radius: 10px;
+    background: #070707;
+    cursor: pointer;
+    font-weight: 800;
+  }
+  .radio input:checked + span {
+    border-color: #ffd400;
+    background: #2a2500;
+    color: #ffd400;
+  }
+
+  .plain-guide {
+    margin-top: 22px;
+    padding: 20px;
+    border: 1px solid #393300;
+    border-radius: 14px;
+    background: #0d0d0d;
+  }
+  .guide-title {
+    color: #ffd400;
+    font-size: 19px;
+    font-weight: 900;
+    margin-bottom: 16px;
+  }
+  .guide-item {
+    padding: 14px 0;
+    border-top: 1px solid #292929;
+  }
+  .guide-item:first-of-type {
+    border-top: 0;
+    padding-top: 0;
+  }
+  .guide-heading {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 900;
+    margin-bottom: 6px;
+  }
+  .guide-text {
+    color: #c9c9c9;
+    font-size: 14px;
+    line-height: 1.75;
+  }
+  .guide-text strong,
+  .guide-text b {
+    color: #ffd400;
+  }
+
+  .notice {
+    margin-top: 20px;
+    padding: 14px 16px;
+    border-left: 4px solid #ffd400;
+    background: #191700;
+    color: #e8e8e8;
+    border-radius: 8px;
+    line-height: 1.65;
+    font-size: 14px;
+  }
+  .notice strong { color: #ffd400; }
+
+  button {
+    width: 100%;
+    height: 56px;
+    border: 0;
+    border-radius: 12px;
+    background: #ffd400;
+    color: #080808;
+    font-size: 19px;
+    font-weight: 900;
+    font-family: inherit;
+    cursor: pointer;
+    margin-top: 22px;
+  }
+  button:hover { filter: brightness(1.08); }
+
+  .results {
+    display: none;
+  }
+  .results.show { display: block; }
+  .result-main {
+    text-align: center;
+    padding: 8px 0 24px;
+    border-bottom: 1px solid #292929;
+  }
+  .result-label {
+    color: #aaa;
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+  .result-number {
+    color: #ffd400;
+    font-size: clamp(36px, 8vw, 58px);
+    font-weight: 900;
+    letter-spacing: 1px;
+  }
+  .result-sub {
+    color: #bbb;
+    margin-top: 6px;
+    font-size: 14px;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .stat {
+    background: #080808;
+    border: 1px solid #252525;
+    border-radius: 10px;
+    padding: 13px 12px;
+  }
+  .stat-label {
+    color: #999;
+    font-size: 13px;
+    margin-bottom: 5px;
+    white-space: nowrap;
+  }
+  .stat-value {
+    font-size: 20px;
+    font-weight: 900;
+    white-space: nowrap;
+  }
+  .yellow { color: #ffd400; }
+
+  .table-wrap {
+    overflow-x: auto;
+    margin-top: 20px;
+  }
+  table {
+    width: auto;
+    max-width: 100%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    table-layout: auto;
+    min-width: 0;
+  }
+  th, td {
+    padding: 11px 14px;
+    border-bottom: 1px solid #282828;
+    text-align: right;
+    font-size: 17px;
+    white-space: nowrap;
+  }
+  th:first-child, td:first-child {
+    text-align: left;
+    padding-left: 8px;
+  }
+  th:last-child, td:last-child {
+    padding-right: 8px;
+  }
+  th {
+    color: #ffd400;
+    font-weight: 900;
+  }
+
+  .footer-note {
+    color: #777;
+    font-size: 13px;
+    line-height: 1.7;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  @media (max-width: 650px) {
+    .wrap { padding: 28px 15px 45px; }
+    .card { padding: 20px 17px; border-radius: 16px; }
+    .input-grid, .grid { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    table { margin: 0; }
+    th, td { padding: 10px 10px; }
+    .dividend-group { grid-column: auto; }
+    .year-row { grid-template-columns: 1fr; }
+  }
+
+  /* Footer：品牌署名置中，文字縮小 2px */
+  .site-footer {
+    width: 100%;
+    margin: 34px auto 0;
+    padding: 24px 16px 30px;
+    box-sizing: border-box;
+    text-align: center !important;
+    border-top: 1px solid #242424;
+  }
+
+  .footer-brand,
+  .footer-instagram {
+    display: block;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center !important;
+    box-sizing: border-box;
+  }
+
+  .footer-brand {
+    color: #fff;
+    font-size: 13px !important;
+    font-weight: 800;
+    line-height: 1.7;
+  }
+
+  .footer-instagram {
+    margin-top: 5px;
+    color: #bdbdbd;
+    font-size: 13px !important;
+    line-height: 1.4;
+    text-decoration: none;
+  }
+
+  .footer-instagram:hover {
+    color: #ffd400;
+  }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="header">
+    <div class="tag">股匠理財部落｜投資工具</div>
+    <h1>定期定額試算器</h1>
+    <div class="subtitle">輸入你的投入計畫，快速估算長期累積成果</div>
+  </header>
+
+  <section class="card">
+    <h2 class="section-title">① 輸入投資計畫</h2>
+
+    <div class="input-grid">
+      <div class="input-group">
+        <label for="initial">首次投入金額</label>
+        <span class="input-unit">元</span>
+        <input id="initial" type="number" min="0" step="1000" value="0" placeholder="例如：100000">
+      </div>
+
+      <div class="input-group">
+        <label for="monthly">每月投入金額</label>
+        <span class="input-unit">元／月</span>
+        <input id="monthly" type="number" min="0" step="1000" value="10000" placeholder="例如：10000">
+      </div>
+
+      <div class="input-group">
+        <label for="years">投入期間</label>
+        <span class="input-unit">年</span>
+        <div class="year-row">
+          <select id="yearSelect">
+            <option value="1">1 年</option>
+            <option value="3">3 年</option>
+            <option value="5">5 年</option>
+            <option value="10" selected>10 年</option>
+            <option value="15">15 年</option>
+            <option value="20">20 年</option>
+            <option value="custom">手動輸入</option>
+          </select>
+          <input id="customYears" type="number" min="1" max="100" step="1" value="10" style="display:none" placeholder="輸入年數">
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="returnRate">預期年化報酬率</label>
+        <span class="input-unit">％／年</span>
+        <select id="returnRate">
+          <option value="1">1%</option><option value="2">2%</option><option value="3">3%</option>
+          <option value="4">4%</option><option value="5" selected>5%</option><option value="6">6%</option>
+          <option value="7">7%</option><option value="8">8%</option><option value="9">9%</option>
+          <option value="10">10%</option><option value="11">11%</option><option value="12">12%</option>
+          <option value="13">13%</option><option value="14">14%</option><option value="15">15%</option>
+          <option value="16">16%</option><option value="17">17%</option><option value="18">18%</option>
+          <option value="19">19%</option><option value="20">20%</option>
+        </select>
+        <span class="definition">
+          年化報酬率就是把不論長短的投資收益，通通換算成「一年」能賺多少的百分比，用來在同一個時間基準上比較不同投資的賺錢效率。
+        </span>
+        <span class="definition" style="margin-top:5px;">
+          ※ 定期定額每個月才投入一次，因此每筆資金實際投入的時間不同，不會把全年投入本金一次視為投入滿一年。
+        </span>
+      </div>
+
+      <div class="input-group dividend-group">
+        <label for="dividend">預期每年領取股利</label>
+        <span class="input-unit">元／年</span>
+        <input id="dividend" type="number" min="0" step="1000" value="0" placeholder="例如：30000">
+        <span class="input-help">預期平均每年可領取的金額；股利會自動視為再投入。</span>
+      </div>
+    </div>
+
+    <div class="notice">
+      <strong>計算說明：</strong>本工具將「年化報酬率」與「預期股利」一起納入資產累積。首次投入與每月投入按照年化報酬率換算成月報酬後複利；每月投入假設於每月底投入，因此每筆資金依實際投入時間累積報酬。每年預期股利則於年底再投入，從下一年度開始繼續產生複利。
+      <br><br>
+      <strong>備註：</strong>此計算不計入手續費。
+    </div>
+
+    <button onclick="calculate()">開始試算</button>
+  </section>
+
+  <section id="results" class="card results">
+    <h2 class="section-title">② 試算結果</h2>
+
+    <div class="result-main">
+      <div class="result-label" id="mainLabel">預估期末總資產</div>
+      <div class="result-number" id="finalValue">$0</div>
+      <div class="result-sub" id="mainSub"></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">首次投入</div>
+        <div class="stat-value" id="rInitial">$0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">定期定額投入</div>
+        <div class="stat-value" id="rMonthly">$0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">累計投入本金</div>
+        <div class="stat-value yellow" id="rPrincipal">$0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">累計淨收益</div>
+        <div class="stat-value yellow" id="rGain">$0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label" id="dividendStatLabel">股利再投入後的累積價值</div>
+        <div class="stat-value yellow" id="rDividend">$0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">預期年化報酬率</div>
+        <div class="stat-value yellow" id="rReturn">5%</div>
+      </div>
+    </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>年度</th>
+            <th>累計投入本金</th>
+            <th>累計淨收益</th>
+            <th>累計股利</th>
+            <th>總報酬金額</th>
+          </tr>
+        </thead>
+        <tbody id="yearTable"></tbody>
+      </table>
+    </div>
+
+    <div class="footer-note">
+      ※ 本試算器僅供教育與規劃參考，不代表實際投資報酬。<br>
+      ※ 備註：此計算不計入手續費。
+    </div>
+  </section>
+</div>
+
+<script>
+function money(n) {
+  return '$' + Math.round(n).toLocaleString('zh-TW');
+}
+
+function getYears() {
+  const select = document.getElementById('yearSelect');
+  if (select.value === 'custom') {
+    return Math.max(1, Math.min(100, Number(document.getElementById('customYears').value) || 1));
+  }
+  return Number(select.value);
+}
+
+document.getElementById('yearSelect').addEventListener('change', function() {
+  const custom = document.getElementById('customYears');
+  custom.style.display = this.value === 'custom' ? 'block' : 'none';
+});
+function calculate() {
+  let lastYearlyResults = [];
+
+const initial = Math.max(0, Number(document.getElementById('initial').value) || 0);
+  const monthly = Math.max(0, Number(document.getElementById('monthly').value) || 0);
+  const years = getYears();
+  const annualDividend = Math.max(0, Number(document.getElementById('dividend').value) || 0);
+  const annualReturn = Number(document.getElementById('returnRate').value) / 100;
+
+  const months = years * 12;
+  const monthlyRate = Math.pow(1 + annualReturn, 1 / 12) - 1;
+
+  /*
+   * 計算時點統一：
+   * ① 期初已有資產先產生當月報酬
+   * ② 每月底投入本月定期定額
+   * ③ 每年第12個月月底，再加入當年度股利
+   *
+   * 因此：
+   * - 當月新投入資金從下一個月開始產生報酬
+   * - 當年度股利從下一年度開始產生報酬
+   *
+   * 五個年度欄位永遠滿足：
+   * 總報酬金額 = 累計投入本金 + 累計淨收益 + 累計股利
+   * 累計淨收益 = 總報酬金額 - 累計投入本金 - 累計股利
+   */
+
+  let asset = initial;
+  let cumulativePrincipal = initial;
+  let cumulativeDividend = 0;
+
+  const yearlyResults = [];
+
+  for (let month = 1; month <= months; month++) {
+    // 先讓既有資產產生本月報酬
+    asset *= (1 + monthlyRate);
+
+    // 月底投入本月金額
+    asset += monthly;
+    cumulativePrincipal += monthly;
+
+    // 年底收到股利並立即再投入
+    if (month % 12 === 0) {
+      cumulativeDividend += annualDividend;
+      asset += annualDividend;
+    }
+
+    if (month % 12 === 0) {
+      // 股利本金本身不是收益；只有資產扣除本金與股利後的部分才是淨收益。
+      const cumulativeNetGain =
+        asset - cumulativePrincipal - cumulativeDividend;
+
+      yearlyResults.push({
+        year: month / 12,
+        principal: cumulativePrincipal,
+        netGain: cumulativeNetGain,
+        dividend: cumulativeDividend,
+        total: asset
+      });
+    }
+  }
+
+  lastYearlyResults = yearlyResults;
+  const final = yearlyResults[yearlyResults.length - 1] || {
+    principal: initial,
+    netGain: 0,
+    dividend: 0,
+    total: initial
+  };
+
+  document.getElementById('results').classList.add('show');
+  document.getElementById('finalValue').textContent = money(final.total);
+  document.getElementById('mainLabel').textContent = '預估期末總報酬金額';
+  document.getElementById('mainSub').textContent =
+    `投入 ${years} 年｜年化報酬率 ${annualReturn * 100}%｜預期股利自動再投入`;
+
+  document.getElementById('rInitial').textContent = money(initial);
+  document.getElementById('rMonthly').textContent = money(monthly * months);
+  document.getElementById('rPrincipal').textContent = money(final.principal);
+  document.getElementById('rGain').textContent = money(final.netGain);
+  document.getElementById('rDividend').textContent = money(final.dividend);
+  document.getElementById('rReturn').textContent = `${annualReturn * 100}%`;
+
+  let rows = '';
+  yearlyResults.forEach(result => {
+    rows += `
+      <tr>
+        <td>第 ${result.year} 年</td>
+        <td>${money(result.principal)}</td>
+        <td>${money(result.netGain)}</td>
+        <td>${money(result.dividend)}</td>
+        <td>${money(result.total)}</td>
+      </tr>`;
+  });
+
+  document.getElementById('yearTable').innerHTML = rows;
+
+
+  document.getElementById('results').scrollIntoView({
+    behavior: 'smooth',
+    block: 'start'
+  });
+}
+</script>
+  <footer class="site-footer">
+    <div class="footer-brand">@股匠理財部落｜定期定額試算器</div>
+    <a class="footer-instagram" href="https://www.instagram.com/stockgujon" target="_blank" rel="noopener noreferrer">
+      <span>Instagram股匠理財部落</span>
+    </a>
+  </footer>
+</body>
+</html>
