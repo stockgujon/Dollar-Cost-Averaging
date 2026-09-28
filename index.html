@@ -430,7 +430,7 @@
           <option value="19">19%</option><option value="20">20%</option>
         </select>
         <span class="definition">
-          年化報酬率就是把不論長短的投資收益，通通換算成「一年」能賺多少的百分比，用來在同一個時間基準上比較不同投資的賺錢效率。
+          年化報酬率就是把不論長短的投資收益，通通換算成「一年」能賺多少的百分比，用來在同一個時間基準上比較不同投資的賺錢效率。<br>※ 本試算器的「預期年化報酬率」不包含另外輸入的股利；股利將另外計算，並於年底自動再投入。
         </span>
         <span class="definition" style="margin-top:5px;">
           ※ 定期定額每個月才投入一次，因此每筆資金實際投入的時間不同，不會把全年投入本金一次視為投入滿一年。
@@ -481,7 +481,7 @@
         <div class="stat-value yellow" id="rGain">$0</div>
       </div>
       <div class="stat">
-        <div class="stat-label" id="dividendStatLabel">股利再投入後的累積價值</div>
+        <div class="stat-label" id="dividendStatLabel">累計股利</div>
         <div class="stat-value yellow" id="rDividend">$0</div>
       </div>
       <div class="stat">
@@ -507,8 +507,7 @@
     </div>
 
     <div class="footer-note">
-      ※ 本試算器僅供教育與規劃參考，不代表實際投資報酬。<br>
-      ※ 備註：此計算不計入手續費。
+      ※ 本試算器僅供教育與規劃參考，不代表實際投資報酬。
     </div>
   </section>
 </div>
@@ -637,7 +636,7 @@ const initial = Math.max(0, Number(document.getElementById('initial').value) || 
   <footer class="site-footer">
     <div class="footer-brand">@股匠理財部落｜定期定額試算器</div>
     <a class="footer-instagram" href="https://www.instagram.com/stockgujon" target="_blank" rel="noopener noreferrer">
-      <span>Instagram @stockgujon</span>
+      <span>Instagram股匠理財部落</span>
     </a>
   </footer>
 </body>
